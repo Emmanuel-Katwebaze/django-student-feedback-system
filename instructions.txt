@@ -6,3 +6,60 @@ python manage.py makemigrations --empty your_app_name
 python manage.py migrate
 
 python manage.py migrate core 0002_auto_20230726_1423
+
+In your project directory
+
+1. git init
+
+2. git add .
+
+3. git commit -m "First Commit"
+
+=> git branch -M main
+
+4. Create a new repository in Github
+
+
+5. git remote add origin https://<repo_owner>@bitbucket.org/<accountname>.git
+
+6. git push -u origin main
+
+error: failed to push some refs to 'https://github.com/Emmanuel-Katwebaze/hostel-management-system-collaborative-project.git'
+git pull --rebase origin <branch_name_with_already_readme>
+
+git log
+
+git rebase --abort <branch_name>
+
+git rebase --skip <branch_name>
+
+7. git remote -v
+   git remote add <remote-name> <remote-url>
+   git push -u <remote-name> <branch-name> eg.
+   git push -u upstream main
+8. git clone <repository-url>
+
+9. When checking out of git branches
+# Make sure you are on the main branch
+git checkout main
+
+# Create a new branch and switch to it
+git checkout -b new_feature_branch
+
+# Make changes to your code
+
+# Stage the changes
+git add .
+
+# Commit the changes
+git commit -m "Add new feature"
+
+# Push the new branch to the remote repository
+git push origin new_feature_branch
+
+git checkout main, your branch is up to date with main
+git checkout -b emma
+
+git status - to see which branch I'm on as well as if there are any updates to be made
+
+

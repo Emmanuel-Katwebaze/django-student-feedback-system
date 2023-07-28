@@ -1,0 +1,64 @@
+{% extends 'project_admin/admin_auth/base.html' %}
+
+{% block content %}
+  {% if messages %}
+    <div class="container mt-3">
+      {% for message in messages %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+  <!-- Your Django template code -->
+  <div class="min-vh-100 d-flex align-items-center justify-content-center">
+    <div class="col-md-6">
+      <div class="card bg-white rounded shadow-sm p-4 text-center">
+        <!-- Heading -->
+        <h2 class="my-3" style="color: #5E72E4;">Students Feedback Portal</h2>
+
+        <div class="card-header py-3 border-light fw-bold d-block text-center rounded-top" style="color: #5E72E4;">ADMIN LOGIN</div>
+        <div class="card-body">
+          <form method="post" action="">
+            {% csrf_token %}
+
+            <!-- InputText component for Username -->
+            <div class="mb-3">
+              <label for="username" class="form-label text-start">Username</label>
+              <input type="text" class="form-control" name="username" id="username" required />
+            </div>
+
+            <!-- InputText component for Password -->
+            <div class="mb-3">
+              <label for="password" class="form-label text-start">Password</label>
+              <div class="input-group">
+                <input type="password" class="form-control" name="password" id="password" required />
+                <button type="button" class="btn btn-outline-secondary" id="togglePassword" onclick="togglePasswordVisibility()"><i class="fas fa-eye-slash" id="eyeIcon"></i></button>
+              </div>
+            </div>
+
+            <!-- SubmitButton component -->
+            <button type="submit" class="btn btn-main text-uppercase text-white text-sm my-3 w-100 fw-normal">SIGN IN</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function togglePasswordVisibility() {
+      const passwordInput = document.getElementById('password')
+      const eyeIcon = document.getElementById('eyeIcon')
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text'        
+        eyeIcon.classList.remove('fa-eye-slash')
+        eyeIcon.classList.add('fa-eye')
+      } else {
+        passwordInput.type = 'password'
+        eyeIcon.classList.remove('fa-eye')
+        eyeIcon.classList.add('fa-eye-slash')
+      }
+    }
+  </script>
+{% endblock %}

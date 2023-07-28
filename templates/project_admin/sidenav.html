@@ -1,0 +1,56 @@
+<nav class="sidenav navbar navbar-vertical  fixed-left  navbar-expand-xs navbar-light bg-white" id="sidenav-main">
+  <div class="scrollbar-inner">
+    <!-- Brand -->
+    <div class="sidenav-header  align-items-center">
+      <a class="navbar-brand font-weight-bold" href="/admin_dashboard" style="color: #6772E5">
+        Admin Panel
+      </a>
+    </div>
+    <div class="navbar-inner">
+      <!-- Collapse -->
+      <div class="collapse navbar-collapse" id="sidenav-collapse-main">
+        <!-- Nav items -->
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link {% if 'index' in segment %} active {% endif %}" href="/admin_dashboard">
+              <i class="ni ni-tv-2 text-primary"></i>
+              <span class="nav-link-text">Dashboard</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if 'students' in segment %} active {% endif %}" href="/admin_dashboard/students">
+              <i class="ni ni-single-02 text-orange"></i>
+              <span class="nav-link-text">Students</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if 'map' in segment %} active {% endif %}" href="/map.html">
+              <i class="ni ni-building text-primary"></i>
+              <span class="nav-link-text">Facilities</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if 'profile' in segment %} active {% endif %}" href="/profile.html">
+              <i class="ni ni-books text-yellow"></i>
+              <span class="nav-link-text">Courses</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if 'tables' in segment %} active {% endif %}" href="/tables.html">
+              <i class="ni ni-paper-diploma text-default"></i>
+              <span class="nav-link-text">Forms</span>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'admin_logout' %}">
+              <i class="ni ni-user-run text-red"></i>
+              <span class="nav-link-text">Logout</span>
+            </a>
+          </li>            
+        </ul>
+        
+      </div>
+    </div>
+  </div>
+</nav>

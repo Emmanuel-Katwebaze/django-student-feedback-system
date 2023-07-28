@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  {% if messages %}
+    <div class="container mt-3">
+      {% for message in messages %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+  <div class="min-vh-100 d-flex align-items-center justify-content-center">
+    <div class="col-md-6">
+      <div class="card bg-white rounded shadow-sm p-4 text-center">
+        <!-- Heading -->
+        <h2 class="my-3" style="color: #5E72E4;">Students Feedback Portal</h2>
+
+        <div class="card-header py-3 border-light fw-bold d-block text-center rounded-top" style="color: #5E72E4;">SIGN UP FOR AN ACCOUNT</div>
+        <div class="card-body">
+          <form method="post" action="">
+            {% csrf_token %}
+
+            <!-- Left column -->
+            <div class="row">
+              <div class="col-md-6">
+                <!-- InputText component for First Name -->
+                <div class="mb-3">
+                  <label for="first_name" class="form-label text-start">First Name</label>
+                  <input type="text" class="form-control" name="first_name" id="first_name" required />
+                </div>
+                <!-- InputText component for Student_id -->
+                <div class="mb-3">
+                  <label for="student_id" class="form-label text-start">Student Id</label>
+                  <input type="number" class="form-control" name="student_id" id="student_id" required />
+                </div>
+                <!-- InputText component for Email -->
+                <div class="mb-3">
+                  <label for="email" class="form-label text-start">Email</label>
+                  <input type="email" class="form-control" name="email" id="email" required />
+                </div>
+              </div>
+
+              <!-- Right column -->
+              <div class="col-md-6">
+                <!-- InputText component for Last Name -->
+                <div class="mb-3">
+                  <label for="last_name" class="form-label text-start">Last Name</label>
+                  <input type="text" class="form-control" name="last_name" id="last_name" required />
+                </div>
+                <!-- InputText component for Course -->
+                <div class="mb-3">
+                  <label for="course" class="form-label text-start">Course</label>
+                  <input type="text" class="form-control" name="course" id="course" required />
+                </div>
+                <div class="mb-3">
+                    <label for="enrollment_year" class="form-label text-start">Enrollment Year</label>
+                    <input type="number" class="form-control" name="enrollment_year" id="enrollment_year" required />
+                  </div>
+              </div>              
+            </div>
+
+            <!-- InputText component for Password -->
+            <div class="mb-3">
+              <label for="password" class="form-label text-start">Password</label>
+              <div class="input-group">
+                <input type="password" class="form-control" name="password" id="password" required />
+                <button type="button" class="btn btn-outline-secondary" id="togglePassword" onclick="togglePasswordVisibility('password')">
+                  <i class="fas fa-eye-slash" id="eyeIcon"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- InputText component for Confirm Password -->
+            <div class="mb-3">
+              <label for="confirm_password" class="form-label text-start">Confirm Password</label>
+              <div class="input-group">
+                <input type="password" class="form-control" name="confirm_password" id="confirm_password" required />
+                <button type="button" class="btn btn-outline-secondary" id="toggleConfirmPassword" onclick="togglePasswordVisibility('confirm_password')">
+                  <i class="fas fa-eye-slash" id="confirmEyeIcon"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- SubmitButton component -->
+            <button type="submit" class="btn btn-main text-uppercase text-white text-sm my-3 w-100 fw-normal">SIGN UP</button>
+          </form>
+        </div>
+        <!-- "Already have an account? Sign In" link -->
+        <div class="mt-3">
+            <p>Already have an account? <a href="{% url 'signin' %}" class="btn btn-link" style="color: #5E72E4;">Sign In</a></p>
+          </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <script>
+    function togglePasswordVisibility(inputId) {
+      const input = document.getElementById(inputId);
+      const eyeIcon = document.getElementById(inputId === 'password' ? 'eyeIcon' : 'confirmEyeIcon');
+      if (input.type === 'password') {
+        input.type = 'text';
+        eyeIcon.classList.remove('fa-eye-slash');
+        eyeIcon.classList.add('fa-eye');
+      } else {
+        input.type = 'password';
+        eyeIcon.classList.remove('fa-eye');
+        eyeIcon.classList.add('fa-eye-slash');
+      }
+    }
+  </script>
+
+{% endblock %}

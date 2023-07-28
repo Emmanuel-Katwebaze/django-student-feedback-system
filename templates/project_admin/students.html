@@ -1,0 +1,379 @@
+{% extends 'project_admin/base.html' %} {% block title %} Dashboard {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}
+<style>
+  /* Styling for the toast */
+  .toast {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: white;
+    color: var(--primary); /* Use the primary color for the words */
+    opacity: 0.9;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    padding: 15px;
+    border-radius: 8px;
+    z-index: 9999;
+    transition: opacity 0.5s;
+  }
+</style>
+{% endblock stylesheets %}
+
+
+{% block content %}
+
+<!-- Header -->
+<div class="header bg-primary pb-6">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-center py-4">
+        <div class="col-lg-6 col-7">
+          <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+              <li class="breadcrumb-item">
+                <a href="#"><i class="fas fa-home"></i></a>
+              </li>
+              <li class="breadcrumb-item"><a href="#">Dashboards</a></li>
+              <li class="breadcrumb-item active" aria-current="page">
+                Students
+              </li>
+            </ol>
+          </nav>
+        </div>
+        <div class="col-lg-6 col-5 text-right">
+          <a href="#" class="btn btn-sm btn-neutral" data-toggle="modal" data-target="#addStudentModal">New</a>
+          <a href="#" class="btn btn-sm btn-neutral">Filters</a>
+        </div>        
+      </div>
+      <!-- Card stats -->
+      <div class="row">
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Page content -->
+<div class="container-fluid mt--6">
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <!-- Card header -->
+        <div class="card-header border-0">
+          <h3 class="mb-0">Students</h3>
+        </div>
+        <!-- Light table -->
+        <div class="table-responsive">
+          <table class="table align-items-center table-flush">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col" class="sort" data-sort="name">Student ID</th>
+                <th scope="col" class="sort" data-sort="budget">First Name</th>
+                <th scope="col" class="sort" data-sort="status">Last Name</th>
+                <th scope="col" class="sort" data-sort="status">Email</th>
+                <th scope="col" class="sort" data-sort="status">Course</th>
+                <th scope="col" class="sort" data-sort="status">Enrollment Year</th>
+                <th scope="col" class="sort" data-sort="status">Actions</th>
+              </tr>
+            </thead>
+            <!-- Table Body -->
+<tbody class="list">
+  {% for student in student_records %}
+  <tr>
+    <td class="studentId budget">
+      {{ student.student_id }}
+    </td>
+    <td class="firstName budget">
+      {{ student.first_name }}
+    </td>
+    <td class="lastName budget">
+      {{ student.last_name }}
+    </td>
+    <td class="email budget">
+      {{ student.email }}
+    </td>
+    <td class="course budget">
+      {{ student.course }}
+    </td>
+    <td class="enrollment_year budget">
+      {{ student.enrollment_year }}
+    </td>
+    <input class="password" type="hidden" value="{{ student.password }}" />
+    <td class="budget">
+      <div class="d-flex justify-content-between">
+        <!-- Edit Button -->
+        <a href="#" class="btn btn-primary btn-sm editBtn">
+          <i class="fas fa-edit"></i> Edit
+        </a>
+        <!-- Delete Button -->
+        <form action="{% url 'delete_student' student.student_id %}" method="POST">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(&quot;Confirm delete?&quot;)">
+            <i class="fas fa-trash-alt"></i> Delete
+          </button>
+        </form>
+      </div>
+    </td>
+  </tr>
+  {% endfor %}
+</tbody>
+
+          </table>
+        </div>
+        
+        <!-- Card footer -->
+        <div class="card-footer py-4">
+          <nav aria-label="...">
+            <ul class="pagination justify-content-end mb-0">
+              <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1">
+                  <i class="fas fa-angle-left"></i>
+                  <span class="sr-only">Previous</span>
+                </a>
+              </li>
+              <li class="page-item active">
+                <a class="page-link" href="#">1</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              <li class="page-item">
+                <a class="page-link" href="#">
+                  <i class="fas fa-angle-right"></i>
+                  <span class="sr-only">Next</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for Editing Student Details -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title pb-0" id="editModalLabel">Edit Student Details</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="editForm" method="POST">
+          {% csrf_token %}
+          <!-- Add a hidden input field to store the student_id -->
+          <input type="hidden" id="student_id" name="student_id">
+          <div class="form-group">
+            <label for="first_name">First Name</label>
+            <input type="text" class="form-control ps-0" id="first_name" name="first_name" placeholder="Enter First Name">
+          </div>
+          <div class="form-group">
+            <label for="last_name">Last Name</label>
+            <input type="text" class="form-control ps-0 p--2" id="last_name" name="last_name" placeholder="Enter Last Name">
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="text" class="form-control ps-0" id="email" name="email" placeholder="Enter email">
+          </div>
+          <div class="form-group">
+            <label for="course">Course</label>
+            <input type="text" class="form-control ps-0" id="course" name="course" placeholder="Enter Course">
+          </div>
+          <div class="form-group">
+            <label for="enrollment_year">Enrollment Year</label>
+            <input type="text" class="form-control ps-0" id="enrollment_year" name="enrollment_year" placeholder="Enter Enrollment Year">
+          </div>
+          <div class="form-group">
+            <label for="password_edit">Password</label>
+            <input type="password" class="form-control ps-0" id="password_edit" name="password_edit" placeholder="Enter Password">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <!-- Update the Save button with an event listener -->
+        <button type="button" class="btn btn-primary" id="saveChangesBtn">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for Adding new students-->
+<div class="modal fade" id="addStudentModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addStudentModalLabel">Add New Student</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="addStudentForm" method="POST" action="{% url 'add_student' %}">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="new_student_id">Student ID</label>
+            <input type="number" class="form-control" id="new_student_id" name="new_student_id" placeholder="Enter Student ID">
+          </div>
+          <div class="form-group">
+            <label for="new_first_name">First Name</label>
+            <input type="text" class="form-control" id="new_first_name" name="new_first_name" placeholder="Enter First Name">
+          </div>
+          <div class="form-group">
+            <label for="new_last_name">Last Name</label>
+            <input type="text" class="form-control" id="new_last_name" name="new_last_name" placeholder="Enter Last Name">
+          </div>
+          <div class="form-group">
+            <label for="new_email">Email</label>
+            <input type="text" class="form-control" id="new_email" name="new_email" placeholder="Enter Email">
+          </div>
+          <div class="form-group">
+            <label for="new_course">Course</label>
+            <input type="text" class="form-control" id="new_course" name="new_course" placeholder="Enter Course">
+          </div>
+          <div class="form-group">
+            <label for="new_enrollment_year">Enrollment Year</label>
+            <input type="text" class="form-control" id="new_enrollment_year" name="new_enrollment_year" placeholder="Enter Enrollment Year">
+          </div>
+          <div class="form-group">
+            <label for="new_password">Password</label>
+            <div class="input-group">
+              <input type="password" class="form-control" id="new_password" name="new_password" placeholder="Enter Password" required>
+              <button type="button" class="btn btn-outline-secondary" id="togglePassword" onclick="togglePasswordVisibility('new_password')">
+                <i class="fas fa-eye-slash" id="eyeIcon"></i>
+              </button>
+            </div>            
+          </div>
+          <div class="form-group">
+            <label for="confirm_password">Confirm Password</label>
+            <div class="input-group">
+              <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirm Password" required>
+              <button type="button" class="btn btn-outline-secondary" id="toggleConfirmPassword" onclick="togglePasswordVisibility('confirm_password')">
+                <i class="fas fa-eye-slash" id="confirmEyeIcon"></i>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="addStudentBtn">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if messages %}
+  {% for message in messages %}
+    <div class="position-fixed top-0 start-50 translate-middle-x">
+      <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+          <strong class="me-auto">{{ message.tags }}</strong>
+        </div>
+        <div class="toast-body">
+          {{ message }}
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+{% endif %}
+
+
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}
+
+<script src="/static/assets/vendor/chart.js/dist/Chart.min.js"></script>
+<script src="/static/assets/vendor/chart.js/dist/Chart.extension.js"></script>
+<script>
+  // JavaScript to handle the Edit button click event
+  // Assuming you have jQuery loaded
+  $(document).ready(function () {
+    $(".editBtn").on("click", function () {
+      // Fetch the student details from the table and populate the modal form
+      var row = $(this).closest("tr");
+      var studentId = row.find(".studentId").text().trim();
+      var firstName = row.find(".firstName").text().trim();
+      var lastName = row.find(".lastName").text().trim();
+      var email = row.find(".email").text().trim();
+      var course = row.find(".course").text().trim();
+      var enrollment_year = row.find(".enrollment_year").text().trim();
+      var password = row.find(".password").val();
+      // Fetch other fields as needed
+      $("#student_id").val(studentId);
+      $("#editModal #first_name").val(firstName);
+      $("#editModal #last_name").val(lastName);
+      $("#editModal #email").val(email);
+      $("#editModal #course").val(course);
+      $("#editModal #enrollment_year").val(enrollment_year);
+      $("#editModal #password_edit").val(password);
+      // Set the form action URL to the specific student's edit URL
+      $("#editForm").attr("action", "/update_student/" + $("#student_id").val());
+      // Show the modal
+      $("#editModal").modal("show");
+    });
+
+    // JavaScript to handle the Save button click event
+    $("#saveChangesBtn").on("click", function () {
+      // Submit the form when Save button is clicked
+      $("#editForm").submit();
+    });
+  });
+</script>
+<script>
+  $(document).ready(function () {
+    // ...
+
+    // JavaScript to handle the click event of the "New" button
+    $("#addStudentBtn").on("click", function () {
+      // Submit the form when "Save" button is clicked
+      $("#addStudentForm").submit();
+    });
+  });
+</script>
+<script>
+  // JavaScript to handle the toast fade-out behavior
+  document.addEventListener("DOMContentLoaded", function () {
+    var toasts = document.querySelectorAll(".toast");
+
+    function fadeToast(toast) {
+      setTimeout(function () {
+        toast.style.opacity = "0";
+        setTimeout(function () {
+          toast.remove();
+        }, 500); // Remove the toast after fade-out transition (0.5s)
+      }, 3000); // 5 seconds before fading out the toast
+    }
+
+    toasts.forEach(function (toast) {
+      fadeToast(toast);
+    });
+  });
+
+  // The rest of your JavaScript code...
+</script>
+<script>
+  function togglePasswordVisibility(inputId) {
+    const input = document.getElementById(inputId);
+    const eyeIcon = document.getElementById(inputId === 'new_password' ? 'eyeIcon' : 'confirmEyeIcon');
+    if (input.type === 'password') {
+      input.type = 'text';
+      eyeIcon.classList.remove('fa-eye-slash');
+      eyeIcon.classList.add('fa-eye');
+    } else {
+      input.type = 'password';
+      eyeIcon.classList.remove('fa-eye');
+      eyeIcon.classList.add('fa-eye-slash');
+    }
+  }
+</script>
+
+{% endblock javascripts %}
